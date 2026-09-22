@@ -518,23 +518,54 @@ select {
   border: 1px solid var(--line);
   border-radius: 8px;
   overflow: hidden;
-  padding: 14px;
+  padding: 16px;
 }
 
 .chart-heading {
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .chart-heading span {
   font-weight: 850;
 }
 
+.chart-heading small {
+  display: block;
+  margin-top: 3px;
+}
+
+.timeframe-tabs {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  padding: 4px;
+}
+
+.timeframe-tabs span {
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  min-width: 34px;
+  padding: 5px 8px;
+  text-align: center;
+}
+
+.timeframe-tabs .active {
+  background: rgba(72, 242, 166, 0.18);
+  color: var(--text);
+}
+
 .mini-chart {
   display: block;
-  height: 150px;
+  height: 210px;
   width: 100%;
 }
 
@@ -544,13 +575,64 @@ select {
   stroke-width: 1;
 }
 
-.mini-chart polyline {
+.mini-chart .chart-axis {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-linecap: round;
+  stroke-width: 1.2;
+}
+
+.mini-chart text {
+  fill: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.mini-chart .chart-area {
+  fill: url("#chartArea");
+}
+
+.mini-chart .chart-line {
   fill: none;
   filter: drop-shadow(0 8px 16px rgba(72, 242, 166, 0.26));
   stroke: url("#chartLine");
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 4;
+}
+
+.mini-chart.down .chart-line {
+  filter: drop-shadow(0 8px 16px rgba(244, 191, 99, 0.22));
+}
+
+.chart-dot {
+  fill: #06110d;
+  stroke: rgba(185, 255, 232, 0.85);
+  stroke-width: 2.5;
+}
+
+.chart-dot.end {
+  fill: var(--green);
+  stroke: #f3f7f4;
+}
+
+.chart-footer {
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  padding-top: 12px;
+}
+
+.chart-footer span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.chart-footer strong {
+  color: var(--green);
+  font-size: 18px;
 }
 
 .memo-block {

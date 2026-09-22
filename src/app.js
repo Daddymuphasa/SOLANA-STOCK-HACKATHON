@@ -143,25 +143,41 @@ function formatMint(value) {
   return `${value.slice(0, 6)}...${value.slice(-6)}`;
 }
 
-function chartPointsFor(asset) {
+function chartModelFor(asset) {
   const seed = [...(asset.symbol || asset.ticker || asset.name)].reduce((sum, char) => sum + char.charCodeAt(0), 0);
   const score = scoreAsset(asset);
-  const points = [];
+  const values = [];
 
   for (let index = 0; index < 18; index += 1) {
     const wave = Math.sin(index * 0.82 + seed) * 7;
     const drift = (index - 8) * ((score - 58) / 28);
     const pulse = Math.cos(index * 0.38 + asset.risk) * 3;
-    points.push(58 - wave - drift - pulse);
+    values.push(58 - wave - drift - pulse);
   }
 
-  const min = Math.min(...points);
-  const max = Math.max(...points);
-  return points.map((point, index) => {
-    const x = 8 + (index / (points.length - 1)) * 244;
-    const y = 18 + ((point - min) / Math.max(max - min, 1)) * 84;
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(" ");
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = Math.max(max - min, 1);
+  const points = values.map((point, index) => {
+    const x = 22 + (index / (values.length - 1)) * 286;
+    const y = 28 + ((max - point) / range) * 116;
+    return { x, y, value: point };
+  });
+  const line = points.map((point, index) => `${index === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
+  const area = `${line} L${points.at(-1).x.toFixed(1)} 160 L${points[0].x.toFixed(1)} 160 Z`;
+  const first = points[0];
+  const last = points.at(-1);
+  const direction = last.value >= first.value ? "up" : "down";
+
+  return {
+    area,
+    direction,
+    first,
+    last,
+    line,
+    maxLabel: Math.round(max),
+    minLabel: Math.round(min)
+  };
 }
 
 function filteredAssets() {
@@ -267,6 +283,7 @@ function renderMemo() {
   const asset = state.selected;
   const allocation = allocationFor(asset);
   const score = scoreAsset(asset);
+  const chart = chartModelFor(asset);
   const valuationTone = asset.markup > 70 ? "Elevated valuation spread" : asset.markup > 35 ? "Moderate valuation spread" : "Disciplined valuation spread";
   memoTitle.textContent = `${asset.name} dossier`;
   memoSubtitle.textContent = `${asset.ticker} · ${asset.sector} · ${formatCurrency(asset.price)} reference price`;
@@ -297,19 +314,40 @@ function renderMemo() {
     </div>
     <div class="chart-card">
       <div class="chart-heading">
-        <span>Research momentum</span>
-        <small>${valuationTone}</small>
+        <div>
+          <span>Research momentum</span>
+          <small>${valuationTone}</small>
+        </div>
+        <div class="timeframe-tabs" aria-label="Chart timeframe">
+          <span>1M</span>
+          <span class="active">3M</span>
+          <span>1Y</span>
+        </div>
       </div>
-      <svg class="mini-chart" viewBox="0 0 260 120" aria-hidden="true">
+      <svg class="mini-chart ${chart.direction}" viewBox="0 0 330 188" aria-hidden="true">
         <defs>
           <linearGradient id="chartLine" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="#48f2a6" />
             <stop offset="100%" stop-color="#6bd6ff" />
           </linearGradient>
+          <linearGradient id="chartArea" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#48f2a6" stop-opacity="0.26" />
+            <stop offset="100%" stop-color="#48f2a6" stop-opacity="0" />
+          </linearGradient>
         </defs>
-        <path class="chart-grid" d="M8 24H252M8 60H252M8 96H252" />
-        <polyline points="${chartPointsFor(asset)}" />
+        <path class="chart-grid" d="M22 28H308M22 68H308M22 108H308M22 148H308" />
+        <path class="chart-axis" d="M22 24V160H312" />
+        <text x="24" y="20">${chart.maxLabel}</text>
+        <text x="24" y="178">${chart.minLabel}</text>
+        <path class="chart-area" d="${chart.area}" />
+        <path class="chart-line" d="${chart.line}" />
+        <circle class="chart-dot start" cx="${chart.first.x.toFixed(1)}" cy="${chart.first.y.toFixed(1)}" r="4" />
+        <circle class="chart-dot end" cx="${chart.last.x.toFixed(1)}" cy="${chart.last.y.toFixed(1)}" r="5" />
       </svg>
+      <div class="chart-footer">
+        <span>Signal composite</span>
+        <strong>${chart.direction === "up" ? "+" : "-"}${Math.abs(Math.round(chart.last.value - chart.first.value))} pts</strong>
+      </div>
     </div>
     <div class="metric-grid">
       <div><span>${asset.liquidity}</span><small>Liquidity</small></div>
