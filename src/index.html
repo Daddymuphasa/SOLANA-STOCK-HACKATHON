@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>StockLana Scout</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="liquidScene" aria-hidden="true"></canvas>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Stocklana Hackathon · PreStocks Track</p>
+        <h1>StockLana Scout</h1>
+      </div>
+      <div class="actions">
+        <a class="ghost" href="https://prestocks.com/products" target="_blank" rel="noreferrer">PreStocks</a>
+        <button id="shareButton" class="ghost-button" type="button">Share asset</button>
+        <button id="exportButton" type="button">Export thesis</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Pre-IPO exposure, explained before you ape</p>
+          <h2>Discover tokenized private-market stocks, score the trade, and simulate the portfolio impact.</h2>
+          <p>
+            Scout turns the PreStocks universe into a research workflow: compare conviction signals,
+            model allocations, and generate a concise bull/bear memo for sharing.
+          </p>
+        </div>
+        <div class="market-panel">
+          <span>PreStocks watchlist</span>
+          <strong id="marketCount">0 assets</strong>
+          <small id="dataSource">Connecting to PreStocks...</small>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="filters" aria-label="Asset filters">
+          <label>
+            Search
+            <input id="searchInput" type="search" placeholder="Company or ticker" />
+          </label>
+          <label>
+            Sector
+            <select id="sectorFilter">
+              <option value="all">All sectors</option>
+            </select>
+          </label>
+          <label>
+            Risk appetite
+            <input id="riskSlider" type="range" min="1" max="5" value="3" />
+          </label>
+          <div class="watchlist-panel">
+            <div>
+              <strong>Watchlist</strong>
+              <small id="watchlistCount">0 saved</small>
+            </div>
+            <div id="watchlistChips" class="chips"></div>
+          </div>
+          <div class="stat-grid">
+            <div><span id="averageScore">0</span><small>avg score</small></div>
+            <div><span id="portfolioValue">$0</span><small>simulated</small></div>
+          </div>
+        </aside>
+
+        <section class="asset-list" aria-label="PreStocks assets">
+          <div class="section-heading">
+            <h3>Opportunity Radar</h3>
+            <p>Ranked by liquidity, narrative strength, markup discipline, and fit for your risk setting.</p>
+          </div>
+          <div id="assetGrid" class="grid"></div>
+        </section>
+
+        <section class="research" aria-label="Research memo">
+          <div class="section-heading">
+            <h3 id="memoTitle">Select an asset</h3>
+            <p id="memoSubtitle">The scout memo will appear here.</p>
+          </div>
+          <div id="memoBody" class="memo empty">Choose a PreStock to generate a bull case, bear case, and allocation suggestion.</div>
+        </section>
+      </section>
+    </main>
+
+    <template id="assetCardTemplate">
+      <article class="asset-card">
+        <button class="asset-button" type="button">
+          <span class="card-top">
+            <img class="asset-logo" alt="" />
+            <span class="watch-badge"></span>
+          </span>
+          <span class="ticker"></span>
+          <strong class="name"></strong>
+          <span class="sector"></span>
+          <span class="score"></span>
+        </button>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+    <script type="module" src="scene.js"></script>
+  </body>
+</html>
