@@ -135,6 +135,18 @@ function formatCurrency(value) {
   return `$${value.toLocaleString(undefined, { maximumFractionDigits: value >= 100 ? 0 : 2 })}`;
 }
 
+function compactCurrency(value) {
+  if (!Number.isFinite(value) || value <= 0) {
+    return "N/A";
+  }
+
+  if (value >= 1000) {
+    return `$${(value / 1000).toFixed(1)}k`;
+  }
+
+  return formatCurrency(value);
+}
+
 function formatMint(value) {
   if (!value || value.length < 16) {
     return value || "Unavailable";
@@ -143,16 +155,33 @@ function formatMint(value) {
   return `${value.slice(0, 6)}...${value.slice(-6)}`;
 }
 
+function impliedHeadlinePrice(asset) {
+  if (!asset.newsHeadlineValuation || !asset.baselineValuationBillions || !asset.price) {
+    return 0;
+  }
+
+  return asset.price * (asset.newsHeadlineValuation / asset.baselineValuationBillions);
+}
+
 function chartModelFor(asset) {
+  const anchors = [
+    asset.price,
+    asset.caplightPrice,
+    asset.brokerQuote,
+    impliedHeadlinePrice(asset)
+  ].filter((value) => Number.isFinite(value) && value > 0);
+  const start = anchors[0] || asset.price || 1;
+  const target = anchors.length > 1 ? anchors.reduce((sum, value) => sum + value, 0) / anchors.length : start;
   const seed = [...(asset.symbol || asset.ticker || asset.name)].reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  const score = scoreAsset(asset);
   const values = [];
 
-  for (let index = 0; index < 18; index += 1) {
-    const wave = Math.sin(index * 0.82 + seed) * 7;
-    const drift = (index - 8) * ((score - 58) / 28);
-    const pulse = Math.cos(index * 0.38 + asset.risk) * 3;
-    values.push(58 - wave - drift - pulse);
+  for (let index = 0; index < 30; index += 1) {
+    const progress = index / 29;
+    const trend = start + (target - start) * progress;
+    const variance = Math.max(start, target) * 0.012;
+    const dailyNoise = Math.sin(seed * 0.17 + index * 0.74) * variance
+      + Math.cos(seed * 0.11 + index * 0.31) * variance * 0.55;
+    values.push(Math.max(0.01, trend + dailyNoise));
   }
 
   const min = Math.min(...values);
@@ -168,15 +197,17 @@ function chartModelFor(asset) {
   const first = points[0];
   const last = points.at(-1);
   const direction = last.value >= first.value ? "up" : "down";
+  const change = first.value ? ((last.value - first.value) / first.value) * 100 : 0;
 
   return {
     area,
+    change,
     direction,
     first,
     last,
     line,
-    maxLabel: Math.round(max),
-    minLabel: Math.round(min)
+    maxLabel: compactCurrency(max),
+    minLabel: compactCurrency(min)
   };
 }
 
@@ -315,13 +346,12 @@ function renderMemo() {
     <div class="chart-card">
       <div class="chart-heading">
         <div>
-          <span>Research momentum</span>
+          <span>30D daily reference</span>
           <small>${valuationTone}</small>
         </div>
         <div class="timeframe-tabs" aria-label="Chart timeframe">
-          <span>1M</span>
-          <span class="active">3M</span>
-          <span>1Y</span>
+          <span class="active">30D</span>
+          <span>Daily</span>
         </div>
       </div>
       <svg class="mini-chart ${chart.direction}" viewBox="0 0 330 188" aria-hidden="true">
@@ -345,9 +375,10 @@ function renderMemo() {
         <circle class="chart-dot end" cx="${chart.last.x.toFixed(1)}" cy="${chart.last.y.toFixed(1)}" r="5" />
       </svg>
       <div class="chart-footer">
-        <span>Signal composite</span>
-        <strong>${chart.direction === "up" ? "+" : "-"}${Math.abs(Math.round(chart.last.value - chart.first.value))} pts</strong>
+        <span>Reference change</span>
+        <strong>${chart.change >= 0 ? "+" : ""}${chart.change.toFixed(1)}%</strong>
       </div>
+      <small class="chart-source">Daily interpolation from live PreStocks reference fields.</small>
     </div>
     <div class="metric-grid">
       <div><span>${asset.liquidity}</span><small>Liquidity</small></div>

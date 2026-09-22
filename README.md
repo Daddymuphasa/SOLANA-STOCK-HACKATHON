@@ -12,7 +12,7 @@ The app shows company names, sectors, baseline prices, SPL mint addresses, PreSt
 
 ## Features
 
-Live PreStocks product universe, search, sector filters, risk scoring, simulated allocations, saved watchlist, shareable asset links, thesis export, SPL mint display, direct PreStocks links, and an interactive Three.js liquid-metal glass UI.
+Live PreStocks product universe, search, sector filters, risk scoring, simulated allocations, daily reference charts, saved watchlist, shareable asset links, thesis export, SPL mint display, direct PreStocks links, and an interactive Three.js liquid-metal glass UI.
 
 ## Project Structure
 

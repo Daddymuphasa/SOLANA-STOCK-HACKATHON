@@ -10,7 +10,7 @@ Tokenized private-company exposure is new, exciting, and risky. Users need a way
 
 ## Solution
 
-Stockana gives users a compact research workflow: browse live PreStocks assets, filter by sector, score opportunities, simulate a portfolio allocation, save a persistent watchlist, share a direct asset research link, and export a bull/bear thesis card.
+Stockana gives users a compact research workflow: browse live PreStocks assets, filter by sector, score opportunities, inspect a daily reference chart, simulate a portfolio allocation, save a persistent watchlist, share a direct asset research link, and export a bull/bear thesis card.
 
 ## Product Direction
 

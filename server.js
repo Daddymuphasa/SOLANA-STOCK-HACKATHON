@@ -72,6 +72,11 @@ function extractPreStocksProducts(html) {
 function mapPreStocksProduct(product) {
   const valuation = Number(product.baselineValuationBillions || product.lastRoundValuation || 0);
   const price = Number(product.baselinePrice || product.caplightPrice || product.brokerQuote || 0);
+  const caplightPrice = Number(product.caplightPrice || 0);
+  const brokerQuote = Number(product.brokerQuote || 0);
+  const newsHeadlineValuation = Number(product.newsHeadlineValuation || 0);
+  const lastRoundValuation = Number(product.lastRoundValuation || 0);
+  const baselineValuationBillions = Number(product.baselineValuationBillions || 0);
 
   const markup = product.newsHeadlineValuation && valuation
     ? Math.max(0, Math.min(95, Math.round(((product.newsHeadlineValuation - valuation) / valuation) * 100)))
@@ -83,6 +88,13 @@ function mapPreStocksProduct(product) {
     name: product.name,
     sector: product.industry || "Private Markets",
     price,
+    caplightPrice,
+    brokerQuote,
+    baselineValuationBillions,
+    lastRoundValuation,
+    lastRoundValuationDate: product.lastRoundValuationDate || "",
+    newsHeadlineValuation,
+    newsHeadlineValuationDate: product.newsHeadlineValuationDate || "",
     change: 0,
     liquidity: product.hadronPublishEnabled ? 68 : 44,
     narrative: product.newsHeadlineValuation ? 90 : 78,
