@@ -12,7 +12,7 @@ PreStocks integration.
 
 GitHub repository: `https://github.com/Daddymuphasa/SOLANA-STOCK-HACKATHON`
 
-Live demo: add the Railway public URL after deployment.
+Live demo: `https://solana-stock-hackathon-production.up.railway.app`
 
 Video walkthrough: record a 2-3 minute walkthrough showing the live product data, asset screener, right-side asset dossier, daily chart, watchlist, share link, thesis export, and PreStocks profile link.
 
@@ -36,7 +36,7 @@ Repository is public or accessible to judges.
 
 Railway deployment opens successfully.
 
-`/healthz` returns `200`.
+Production app opens successfully.
 
 `/api/prestocks` returns live product data.
 
