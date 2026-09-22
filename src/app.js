@@ -127,6 +127,43 @@ function allocationFor(asset) {
   return Math.max(2, Math.min(18, Math.round(base + score / 12 - riskPenalty)));
 }
 
+function formatCurrency(value) {
+  if (!Number.isFinite(value) || value <= 0) {
+    return "N/A";
+  }
+
+  return `$${value.toLocaleString(undefined, { maximumFractionDigits: value >= 100 ? 0 : 2 })}`;
+}
+
+function formatMint(value) {
+  if (!value || value.length < 16) {
+    return value || "Unavailable";
+  }
+
+  return `${value.slice(0, 6)}...${value.slice(-6)}`;
+}
+
+function chartPointsFor(asset) {
+  const seed = [...(asset.symbol || asset.ticker || asset.name)].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const score = scoreAsset(asset);
+  const points = [];
+
+  for (let index = 0; index < 18; index += 1) {
+    const wave = Math.sin(index * 0.82 + seed) * 7;
+    const drift = (index - 8) * ((score - 58) / 28);
+    const pulse = Math.cos(index * 0.38 + asset.risk) * 3;
+    points.push(58 - wave - drift - pulse);
+  }
+
+  const min = Math.min(...points);
+  const max = Math.max(...points);
+  return points.map((point, index) => {
+    const x = 8 + (index / (points.length - 1)) * 244;
+    const y = 18 + ((point - min) / Math.max(max - min, 1)) * 84;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+}
+
 function filteredAssets() {
   return assets
     .filter((asset) => state.sector === "all" || asset.sector === state.sector)
@@ -217,7 +254,7 @@ function renderAssets() {
     fragment.querySelector(".ticker").textContent = asset.ticker;
     fragment.querySelector(".name").textContent = asset.name;
     fragment.querySelector(".sector").textContent = asset.sector;
-    fragment.querySelector(".score").textContent = `${scoreAsset(asset)} STOKANA score`;
+    fragment.querySelector(".score").textContent = `${scoreAsset(asset)} Stockana score`;
     fragment.querySelector(".watch-badge").textContent = isWatched(asset) ? "Saved" : "";
     button.addEventListener("click", () => {
       selectAsset(asset);
@@ -229,20 +266,64 @@ function renderAssets() {
 function renderMemo() {
   const asset = state.selected;
   const allocation = allocationFor(asset);
-  memoTitle.textContent = `${asset.name} thesis`;
-  memoSubtitle.textContent = `${asset.ticker} · $${asset.price.toLocaleString()} · ${asset.change >= 0 ? "+" : ""}${asset.change}% reference move`;
+  const score = scoreAsset(asset);
+  const valuationTone = asset.markup > 70 ? "Elevated valuation spread" : asset.markup > 35 ? "Moderate valuation spread" : "Disciplined valuation spread";
+  memoTitle.textContent = `${asset.name} dossier`;
+  memoSubtitle.textContent = `${asset.ticker} · ${asset.sector} · ${formatCurrency(asset.price)} reference price`;
   memoBody.classList.remove("empty");
   memoBody.innerHTML = `
-    <div class="memo-block"><strong>STOKANA score</strong><span class="allocation">${scoreAsset(asset)}/100</span></div>
+    <div class="dossier-header">
+      <div class="dossier-title">
+        ${asset.logo ? `<img src="${asset.logo}" alt="" />` : `<span>${asset.name.slice(0, 1)}</span>`}
+        <div>
+          <strong>${asset.name}</strong>
+          <small>${asset.symbol || asset.ticker} · ${asset.sector}</small>
+        </div>
+      </div>
+      <div class="score-ring">
+        <span>${score}</span>
+        <small>score</small>
+      </div>
+    </div>
+    <div class="price-row">
+      <div>
+        <small>Reference price</small>
+        <strong>${formatCurrency(asset.price)}</strong>
+      </div>
+      <div>
+        <small>Suggested sleeve</small>
+        <strong>${allocation}%</strong>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-heading">
+        <span>Research momentum</span>
+        <small>${valuationTone}</small>
+      </div>
+      <svg class="mini-chart" viewBox="0 0 260 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="chartLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#48f2a6" />
+            <stop offset="100%" stop-color="#6bd6ff" />
+          </linearGradient>
+        </defs>
+        <path class="chart-grid" d="M8 24H252M8 60H252M8 96H252" />
+        <polyline points="${chartPointsFor(asset)}" />
+      </svg>
+    </div>
+    <div class="metric-grid">
+      <div><span>${asset.liquidity}</span><small>Liquidity</small></div>
+      <div><span>${asset.narrative}</span><small>Narrative</small></div>
+      <div><span>${asset.markup}%</span><small>Valuation spread</small></div>
+      <div><span>${asset.risk}/5</span><small>Risk tier</small></div>
+    </div>
     <div class="memo-actions">
       <button id="watchButton" type="button">${isWatched(asset) ? "Remove from watchlist" : "Save to watchlist"}</button>
       ${asset.route ? `<a class="memo-link-button" href="${asset.route}" target="_blank" rel="noreferrer">Open on PreStocks</a>` : ""}
     </div>
-    <div class="memo-block"><strong>Bull case</strong><p>${asset.bull}</p></div>
-    <div class="memo-block"><strong>Bear case</strong><p>${asset.bear}</p></div>
-    <div class="memo-block"><strong>Suggested simulated allocation</strong><p><span class="allocation">${allocation}%</span> of a high-conviction PreStocks sleeve. Not financial advice.</p></div>
-    <div class="memo-block"><strong>PreStocks link</strong><p>${asset.route ? `<a href="${asset.route}" target="_blank" rel="noreferrer">${asset.route}</a>` : "Sample asset. Live route unavailable."}</p></div>
-    <div class="memo-block"><strong>SPL mint</strong><p>${asset.address || "Unavailable"}</p></div>
+    <div class="memo-block"><strong>Investment case</strong><p>${asset.bull}</p></div>
+    <div class="memo-block"><strong>Risk notes</strong><p>${asset.bear}</p></div>
+    <div class="memo-block"><strong>Asset reference</strong><p><span class="mono">${formatMint(asset.address)}</span>${asset.route ? ` · <a href="${asset.route}" target="_blank" rel="noreferrer">PreStocks profile</a>` : ""}</p></div>
   `;
   document.querySelector("#watchButton").addEventListener("click", () => toggleWatchlist(asset));
 }
@@ -271,12 +352,12 @@ riskSlider.addEventListener("input", (event) => {
 
 exportButton.addEventListener("click", async () => {
   const asset = state.selected;
-  const text = `STOKANA thesis: ${asset.name} (${asset.ticker})
+  const text = `Stockana thesis: ${asset.name} (${asset.ticker})
 Score: ${scoreAsset(asset)}/100
 Simulated allocation: ${allocationFor(asset)}%
 Bull: ${asset.bull}
 Bear: ${asset.bear}
-Generated by STOKANA. Not financial advice.`;
+Generated by Stockana. Not financial advice.`;
 
   await navigator.clipboard.writeText(text);
   exportButton.textContent = "Copied";

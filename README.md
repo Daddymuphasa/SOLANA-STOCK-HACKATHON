@@ -1,12 +1,12 @@
-# STOKANA
+# Stockana
 
-STOKANA is a research workspace for tokenized private-market assets on Solana.
+Stockana is a research workspace for tokenized private-market assets on Solana.
 
 It helps users browse PreStocks assets, compare risk-adjusted opportunities, simulate allocation size, save a watchlist, and export a clear bull/bear thesis.
 
 ## What It Does
 
-STOKANA connects to live PreStocks product data through `GET /api/prestocks`. The adapter reads the public PreStocks products page, extracts the embedded product payload, and maps it into the app's research model.
+Stockana connects to live PreStocks product data through `GET /api/prestocks`. The adapter reads the public PreStocks products page, extracts the embedded product payload, and maps it into the app's research model.
 
 The app shows company names, sectors, baseline prices, SPL mint addresses, PreStocks product routes, logos, thesis notes, opportunity scores, and simulated allocations.
 

@@ -3,15 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>STOKANA</title>
+    <title>Stockana</title>
+    <link rel="icon" href="logo.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <canvas id="liquidScene" aria-hidden="true"></canvas>
     <header class="topbar">
-      <div>
-        <p class="eyebrow">PreStocks Research Workspace</p>
-        <h1>STOKANA</h1>
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 44 44" role="img">
+            <path d="M22 3 39 12.5v19L22 41 5 31.5v-19L22 3Z"></path>
+            <path d="M14 28.5 22 14l8 14.5M17.5 23h9"></path>
+          </svg>
+        </span>
+        <div>
+          <p class="eyebrow">PreStocks Research Workspace</p>
+          <h1>Stockana</h1>
+        </div>
       </div>
       <div class="actions">
         <a class="ghost" href="https://prestocks.com/products" target="_blank" rel="noreferrer">PreStocks</a>
@@ -26,7 +35,7 @@
           <p class="eyebrow">Private-market exposure, clearly mapped</p>
           <h2>Research tokenized private-market assets before you size the position.</h2>
           <p>
-            STOKANA turns the PreStocks universe into a research workflow: compare risk signals,
+            Stockana turns the PreStocks universe into a research workflow: compare risk signals,
             model allocations, and generate concise bull/bear memos for better decision-making.
           </p>
         </div>
@@ -68,18 +77,18 @@
 
         <section class="asset-list" aria-label="PreStocks assets">
           <div class="section-heading">
-            <h3>Opportunity Radar</h3>
-            <p>Ranked by liquidity, narrative strength, markup discipline, and fit for your risk setting.</p>
+            <h3>Market Screener</h3>
+            <p>Ranked by liquidity, narrative quality, valuation discipline, and fit for your risk setting.</p>
           </div>
           <div id="assetGrid" class="grid"></div>
         </section>
 
-        <section class="research" aria-label="Research memo">
+        <section class="research" aria-label="Asset intelligence panel">
           <div class="section-heading">
             <h3 id="memoTitle">Select an asset</h3>
-            <p id="memoSubtitle">The STOKANA memo will appear here.</p>
+            <p id="memoSubtitle">The Stockana asset dossier will appear here.</p>
           </div>
-          <div id="memoBody" class="memo empty">Choose a PreStock to generate a bull case, bear case, and allocation suggestion.</div>
+          <div id="memoBody" class="memo empty">Choose a PreStock to review its score, thesis, valuation context, and simulated allocation.</div>
         </section>
       </section>
     </main>
