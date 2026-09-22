@@ -217,7 +217,7 @@ function renderAssets() {
     fragment.querySelector(".ticker").textContent = asset.ticker;
     fragment.querySelector(".name").textContent = asset.name;
     fragment.querySelector(".sector").textContent = asset.sector;
-    fragment.querySelector(".score").textContent = `${scoreAsset(asset)} scout score`;
+    fragment.querySelector(".score").textContent = `${scoreAsset(asset)} STOKANA score`;
     fragment.querySelector(".watch-badge").textContent = isWatched(asset) ? "Saved" : "";
     button.addEventListener("click", () => {
       selectAsset(asset);
@@ -233,7 +233,7 @@ function renderMemo() {
   memoSubtitle.textContent = `${asset.ticker} · $${asset.price.toLocaleString()} · ${asset.change >= 0 ? "+" : ""}${asset.change}% 24h demo move`;
   memoBody.classList.remove("empty");
   memoBody.innerHTML = `
-    <div class="memo-block"><strong>Scout score</strong><span class="allocation">${scoreAsset(asset)}/100</span></div>
+    <div class="memo-block"><strong>STOKANA score</strong><span class="allocation">${scoreAsset(asset)}/100</span></div>
     <div class="memo-actions">
       <button id="watchButton" type="button">${isWatched(asset) ? "Remove from watchlist" : "Save to watchlist"}</button>
       ${asset.route ? `<a class="memo-link-button" href="${asset.route}" target="_blank" rel="noreferrer">Open on PreStocks</a>` : ""}
@@ -271,7 +271,7 @@ riskSlider.addEventListener("input", (event) => {
 
 exportButton.addEventListener("click", async () => {
   const asset = state.selected;
-  const text = `StockLana Scout thesis: ${asset.name} (${asset.ticker})
+  const text = `STOKANA thesis: ${asset.name} (${asset.ticker})
 Score: ${scoreAsset(asset)}/100
 Simulated allocation: ${allocationFor(asset)}%
 Bull: ${asset.bull}

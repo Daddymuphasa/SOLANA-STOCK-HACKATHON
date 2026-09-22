@@ -1,12 +1,12 @@
-# StockLana Scout
+# STOKANA
 
-StockLana Scout is a PreStocks discovery terminal for the Solana Stocklana hackathon.
+STOKANA is a PreStocks discovery terminal for the Solana Stocklana hackathon.
 
 It helps users browse tokenized pre-IPO assets, compare risk-adjusted opportunities, simulate allocation size, save a watchlist, and export a simple bull/bear thesis.
 
 ## What It Does
 
-StockLana Scout connects to live PreStocks product data through `GET /api/prestocks`. The adapter reads the public PreStocks products page, extracts the embedded product payload, and maps it into the app's research model.
+STOKANA connects to live PreStocks product data through `GET /api/prestocks`. The adapter reads the public PreStocks products page, extracts the embedded product payload, and maps it into the app's research model.
 
 The app shows company names, sectors, baseline prices, SPL mint addresses, PreStocks product routes, logos, thesis notes, opportunity scores, and simulated allocations. If the live fetch fails, it falls back to bundled demo data so the demo still works.
 

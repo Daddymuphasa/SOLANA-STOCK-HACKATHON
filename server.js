@@ -102,7 +102,7 @@ async function sendPreStocksProducts(res) {
   try {
     const response = await fetch(prestocksProductsUrl, {
       headers: {
-        "User-Agent": "StockLana-Scout/0.1"
+        "User-Agent": "STOKANA/0.1"
       }
     });
 
@@ -166,5 +166,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`StockLana Scout running at http://localhost:${port}`);
+  console.log(`STOKANA running at http://localhost:${port}`);
 });

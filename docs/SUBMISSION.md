@@ -1,8 +1,8 @@
-# StockLana Scout Submission Draft
+# STOKANA Submission Draft
 
 ## One-liner
 
-StockLana Scout is a PreStocks discovery and portfolio simulation terminal that helps Solana users evaluate tokenized pre-IPO exposure before they trade.
+STOKANA is a PreStocks discovery and portfolio simulation terminal that helps Solana users evaluate tokenized pre-IPO exposure before they trade.
 
 ## Track focus
 
@@ -16,7 +16,7 @@ Tokenized private-company exposure is new, exciting, and risky. Users need a way
 
 ## Solution
 
-Scout gives users a compact research workflow:
+STOKANA gives users a compact research workflow:
 
 - browse live PreStocks assets through the `/api/prestocks` adapter
 - search and filter by sector
@@ -58,4 +58,4 @@ Scout gives users a compact research workflow:
 
 ## Judging pitch
 
-PreStocks already makes private-company exposure liquid and 24/7 on Solana. StockLana Scout makes that market legible. It turns tokenized pre-IPO assets from a list of tickers into a workflow for discovery, sizing, and thesis sharing.
+PreStocks already makes private-company exposure liquid and 24/7 on Solana. STOKANA makes that market legible. It turns tokenized pre-IPO assets from a list of tickers into a workflow for discovery, sizing, and thesis sharing.
