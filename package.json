@@ -2,16 +2,15 @@
   "name": "stokana",
   "version": "0.1.0",
   "private": true,
-  "description": "PreStocks discovery, thesis, and portfolio simulator for the Solana Stocklana hackathon.",
+  "description": "PreStocks research, thesis, and portfolio simulation workspace.",
   "scripts": {
     "start": "node server.js"
   },
   "keywords": [
     "solana",
-    "stocklana",
     "prestocks",
     "rwa",
-    "hackathon"
+    "research"
   ],
   "license": "MIT"
 }
