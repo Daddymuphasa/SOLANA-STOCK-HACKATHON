@@ -148,6 +148,19 @@ async function sendPreStocksProducts(res) {
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
 
+  if (url.pathname === "/healthz") {
+    res.writeHead(200, {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store"
+    });
+    res.end(JSON.stringify({
+      ok: true,
+      service: "stockana",
+      timestamp: new Date().toISOString()
+    }));
+    return;
+  }
+
   if (url.pathname === "/api/prestocks") {
     sendPreStocksProducts(res);
     return;
